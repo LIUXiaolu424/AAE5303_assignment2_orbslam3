@@ -39,11 +39,11 @@ This report presents the implementation and evaluation of **Monocular Visual Odo
 
 | Metric | Value | Description |
 |--------|-------|-------------|
-| **ATE RMSE** | **132.1547 m** | Global accuracy after Sim(3) alignment (scale corrected) |
-| **RPE Trans Drift** | **2.8701 m/m** | Translation drift rate (mean error per meter, delta=10 m) |
-| **RPE Rot Drift** | **173.3319 deg/100m** | Rotation drift rate (mean angle per 100 m, delta=10 m) |
-| **Completeness** | **87.01%** | Matched poses / total ground-truth poses (1701 / 1955) |
-| **Estimated poses** | 2,826 | Trajectory poses in `CameraTrajectory.txt` |
+| **ATE RMSE** | **2.592232 m** | Global accuracy after Sim(3) alignment (scale corrected) |
+| **RPE Trans Drift** | **1.3851020 m/m** | Translation drift rate (mean error per meter, delta=10 m) |
+| **RPE Rot Drift** | **92.10247 deg/100m** | Rotation drift rate (mean angle per 100 m, delta=10 m) |
+| **Completeness** | **96.55%** | Matched poses / total ground-truth poses (2269 / 2350) |
+| **Estimated poses** | 4,154 | Trajectory poses in `CameraTrajectory.txt` |
 
 ---
 
@@ -171,7 +171,7 @@ This section describes the **exact** evaluation protocol used in this report. Th
 #### Step 1 — ATE with Sim(3) alignment (scale corrected)
 
 ```bash
-evo_ape tum ground_truth.txt CameraTrajectory.txt \
+evo_ape tum ground_truth.txt CameraTrajectory_tum.txt \
   --align --correct_scale \
   --t_max_diff 0.1 -va
 ```
@@ -182,14 +182,14 @@ We report **ATE RMSE (m)** as the primary global accuracy metric.
 
 ```bash
 # Translation RPE over 10 m (meters)
-evo_rpe tum ground_truth.txt CameraTrajectory.txt \
+evo_rpe tum ground_truth.txt CameraTrajectory_tum.txt \
   --align --correct_scale \
   --t_max_diff 0.1 \
   --delta 10 --delta_unit m \
   --pose_relation trans_part -va
 
 # Rotation RPE over 10 m (degrees)
-evo_rpe tum ground_truth.txt CameraTrajectory.txt \
+evo_rpe tum ground_truth.txt CameraTrajectory_tum.txt \
   --align --correct_scale \
   --t_max_diff 0.1 \
   --delta 10 --delta_unit m \
@@ -198,8 +198,8 @@ evo_rpe tum ground_truth.txt CameraTrajectory.txt \
 
 We convert evo’s mean RPE over 10 m into drift rates:
 
-- **RPE translation drift (m/m)** = `RPE_trans_mean_m / 10`
-- **RPE rotation drift (deg/100m)** = `(RPE_rot_mean_deg / 10) * 100`
+- **RPE translation drift (m/m)** = `RPE_trans_mean_m / 10` = 1.385102 m/m
+- **RPE rotation drift (deg/100m)** = `(RPE_rot_mean_deg / 10) * 100` = 92.10247 deg/100m
 
 #### Step 3 — Completeness
 
@@ -233,12 +233,12 @@ The dataset is from the **MARS-LVIG** UAV dataset, captured over Hong Kong Islan
 
 | Property | Value |
 |----------|-------|
-| **Dataset Name** | HKisland_GNSS03 |
+| **Dataset Name** | HKisland02 |
 | **Source** | MARS-LVIG / UAVScenes |
-| **Duration** | 390.78 seconds (~6.5 minutes) |
-| **Total Images** | 3,833 frames |
+| **Duration** | 469 seconds (7 minutes 49 seconds) |
+| **Total Images** | 4,701 frames |
 | **Image Resolution** | 2448 × 2048 pixels |
-| **Frame Rate** | ~10 Hz |
+| **Frame Rate** | ~10 Hz (4701 frames / 469s ≈ 10.02 Hz) |
 | **Trajectory Length** | ~1,900 meters |
 | **Height Variation** | 0 - 90 meters |
 
