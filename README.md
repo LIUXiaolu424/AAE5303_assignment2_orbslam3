@@ -275,23 +275,30 @@ RTK (Real-Time Kinematic) GPS provides centimeter-level positioning accuracy:
 
 ### Camera Calibration
 
-```yaml
+```HKisland_Mono.yaml
 Camera.type: "PinHole"
-Camera.fx: 1444.43
-Camera.fy: 1444.34
-Camera.cx: 1179.50
-Camera.cy: 1044.90
 
-Camera.k1: -0.0560
-Camera.k2: 0.1180
-Camera.p1: 0.00122
-Camera.p2: 0.00064
-Camera.k3: -0.0627
+# Camera calibration and distortion parameters (OpenCV) 
+Camera1.fx: 1444.43
+Camera1.fy: 1444.34
+Camera1.cx: 1179.50
+Camera1.cy: 1044.90
 
+Camera1.k1: -0.0560
+Camera1.k2: 0.1180
+Camera1.p1: 0.00122
+Camera1.p2: 0.00064
+Camera1.k3: -0.0627
+
+# Camera resolution
 Camera.width: 2448
 Camera.height: 2048
-Camera.fps: 10.0
-Camera.RGB: 0  # OpenCV images are typically BGR by default
+
+# Camera frames per second 
+Camera.fps: 10
+
+# Color order of the images (0: BGR, 1: RGB. It is ignored if images are grayscale)
+Camera.RGB: 1
 ```
 
 **Note on ORB-SLAM3 settings format**:
@@ -303,16 +310,13 @@ Camera.RGB: 0  # OpenCV images are typically BGR by default
 
 | Parameter | Value | Description |
 |-----------|-------|-------------|
-| `nFeatures` | 1500 | Features per frame |
+| `nFeatures` | 3500 | Features per frame |
 | `scaleFactor` | 1.2 | Pyramid scale factor |
-| `nLevels` | 8 | Pyramid levels |
+| `nLevels` | 9 | Pyramid levels |
 | `iniThFAST` | 20 | Initial FAST threshold |
 | `minThFAST` | 7 | Minimum FAST threshold |
 
 ### Running ORB-SLAM3 (example)
-
-This report assumes you have already generated a TUM-format trajectory file (e.g., `CameraTrajectory.txt` or `KeyFrameTrajectory.txt`) from ORB-SLAM3.
-
 ---
 
 ## 📈 Results and Analysis
@@ -324,25 +328,25 @@ This report assumes you have already generated a TUM-format trajectory file (e.g
 VISUAL ODOMETRY EVALUATION RESULTS
 ================================================================================
 
-Ground Truth: RTK trajectory (1,955 poses)
-Estimated:    ORB-SLAM3 camera trajectory (2,826 poses)
-Matched Poses: 1,701 / 1,955 (87.01%)  ← Completeness
+Ground Truth: RTK trajectory (2,350 poses)
+Estimated:    ORB-SLAM3 camera trajectory (4,154 poses)
+Matched Poses: 2,269 / 2,350 (96.55%)  ← Completeness
 
 METRIC 1: ATE (Absolute Trajectory Error)
 ────────────────────────────────────────
-RMSE:   132.1547 m
-Mean:   114.6344 m
-Std:    65.7558 m
+RMSE:   2.5922 m
+Mean:   2.3852 m
+Std:    1.0150 m
 
 METRIC 2: RPE Translation Drift (distance-based, delta=10 m)
 ────────────────────────────────────────
-Mean translational RPE over 10 m: 28.7014 m
-Translation drift rate:           2.8701 m/m
+Mean translational RPE over 10 m: 13.8510 m
+Translation drift rate:           1.3851 m/m
 
 METRIC 3: RPE Rotation Drift (distance-based, delta=10 m)
 ────────────────────────────────────────
-Mean rotational RPE over 10 m: 17.3332 deg
-Rotation drift rate:        173.3319 deg/100m
+Mean rotational RPE over 10 m: 9.2102 deg
+Rotation drift rate:        92.1020 deg/100m
 
 ================================================================================
 ```
@@ -351,19 +355,19 @@ Rotation drift rate:        173.3319 deg/100m
 
 | Parameter | Value |
 |-----------|-------|
-| **Sim(3) scale correction** | 6.5944 |
-| **Sim(3) translation** | [-45.426, -95.559, 36.060] m |
+| **Sim(3) scale correction** | 2.6671 |
+| **Sim(3) translation** | [0.1716, 1.6041, 1.8781] m |
 | **Association threshold** | \(t_{max\_diff}\) = 0.1 s |
-| **Association rate (Completeness)** | 87.01% |
+| **Association rate (Completeness)** | 96.55% |
 
 ### Performance Analysis
 
 | Metric | Value | Grade | Interpretation |
 |--------|-------|-------|----------------|
-| **ATE RMSE** | 132.15 m | F | Very large global error after alignment |
-| **RPE Trans Drift** | 2.87 m/m | D | Large local drift per traveled distance |
-| **RPE Rot Drift** | 173.33 deg/100m | F | Severe orientation drift |
-| **Completeness** | 87.01% | B | Many poses can be evaluated, but accuracy is low |
+| **ATE RMSE** | 2.5922 m | B | Moderate global error after alignment, acceptable for outdoor coarse localization |
+| **RPE Trans Drift** | 1.3851 m/m | C | Noticeable local drift per traveled distance (10x higher than ideal monocular SLAM) |
+| **RPE Rot Drift** | 92.1020 deg/100m | D | Severe orientation drift in isolated frames (max rotation error 177.86 deg) |
+| **Completeness** | 96.55% | A | Near-perfect pose association rate, minimal tracking loss (only 3.45% failure) |
 
 ---
 
