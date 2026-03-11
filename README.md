@@ -273,7 +273,7 @@ RTK (Real-Time Kinematic) GPS provides centimeter-level positioning accuracy:
 | **Vocabulary** | ORBvoc.txt (pre-trained) |
 | **Operating System** | Linux (Ubuntu 22.04) |
 
-### Camera Calibration
+### Camera Calibration and IMU Calibration(From TUM_VI.yaml)
 
 ```HKisland_Mono.yaml
 Camera.type: "PinHole"
@@ -299,6 +299,24 @@ Camera.fps: 10
 
 # Color order of the images (0: BGR, 1: RGB. It is ignored if images are grayscale)
 Camera.RGB: 1
+
+IMU.Tbc: !!opencv-matrix
+   rows: 4
+   cols: 4
+   dt: d
+   data: [1.0, 0.0, 0.0, 0.0,
+          0.0, 1.0, 0.0, 0.0,
+          0.0, 0.0, 1.0, 0.0,
+          0.0, 0.0, 0.0, 1.0]
+
+
+IMU.fx: 0.000208333333333 
+IMU.fy: 0.00208333333333
+IMU.fbx: 2.08333333333e-06
+IMU.fby: 0.000208333333333
+
+#HKisland02.bag/livox/imu is 200Hz）
+IMU.Rate: 200.0
 ```
 
 **Note on ORB-SLAM3 settings format**:
@@ -427,10 +445,10 @@ This assignment demonstrates monocular Visual Odometry implementation using ORB-
 
 | Priority | Action | Expected Improvement |
 |----------|--------|---------------------|
-| High | Increase `nFeatures` to 2000-2500 | 30-40% ATE reduction |
-| High | Lower FAST thresholds (15/5) | 20-30% RPE reduction |
-| Medium | Verify camera calibration | 15-25% overall improvement |
-| Low | Enable IMU fusion (VIO mode) | 50-70% accuracy improvement |
+| High | Increase `nFeatures` from 1500 to 3500 | 50-60% ATE reduction |
+| High | Lower FAST thresholds (20/9) | 20-30% RPE reduction |
+| Medium | Verify camera calibration(HKisland_Mono.yaml) | 15-25% overall improvement |
+| Low | Enable IMU fusion (Mono-Inertial VIO mode) using /dji_osdk_ros/imu (400 Hz) | 50-70% accuracy improvement/Especially for RPE Rot reduction |
 
 ---
 
