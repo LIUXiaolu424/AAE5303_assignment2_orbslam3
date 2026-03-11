@@ -275,7 +275,7 @@ RTK (Real-Time Kinematic) GPS provides centimeter-level positioning accuracy:
 
 ### Camera Calibration and IMU Calibration(From TUM_VI.yaml)
 
-```HKisland_Mono.yaml
+```HKisland_Mono_IMU.yaml
 Camera.type: "PinHole"
 
 # Camera calibration and distortion parameters (OpenCV) 
@@ -436,10 +436,10 @@ This figure is generated from the same inputs used for evaluation (`ground_truth
 
 This assignment demonstrates monocular Visual Odometry implementation using ORB-SLAM3 on UAV aerial imagery. Key findings:
 
-1. ✅ **System Operation**: ORB-SLAM3 successfully processes 3,833 images over 1.9 km trajectory
-2. ✅ **Evaluation coverage**: 87.01% completeness shows that many poses can be evaluated against RTK ground truth
+1. ✅ **System Operation**: ORB-SLAM3 successfully processes 3,510 images over 1.9 km trajectory
+2. ✅ **Evaluation coverage**: 96.55% completeness shows that many poses can be evaluated against RTK ground truth
 3. ⚠️ **Tracking stability**: Frequent tracking failures indicate the need for parameter tuning and stronger robustness measures
-4. ❌ **Accuracy**: The current baseline exhibits very large global error and drift rates on this sequence
+4. ⚠️ **Accuracy**: The current baseline exhibits very large global error and drift rates on this sequence
 
 ### Recommendations for Improvement
 
